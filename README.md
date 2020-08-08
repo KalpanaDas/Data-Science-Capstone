@@ -9,8 +9,11 @@ The goal of this exercise is to create a product to highlight the prediction alg
 2. A slide deck consisting of no more than 5 slides created with R Studio Presenter pitching your algorithm and app as if you were presenting to your boss or an investor.
 
 The Shiny app for the the assignment is available at: https://kalpanadas.shinyapps.io/ShinyApp/
+
 The Pitch presentation is available at: https://rpubs.com/Kalpana_Das/647170
+
 The Milestone Report on RPubs is available at: https://rpubs.com/Kalpana_Das/646738
+
 The source code files for the Shiny app, the Pitch presentation and the Milestone Report are available on my GitHub repository at: https://github.com/KalpanaDas/Data-Science-Capstone/
 
 Thank you!!
