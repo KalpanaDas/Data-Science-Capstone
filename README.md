@@ -27,3 +27,5 @@ This repository contains the following files:
 4. Document.dcf (for the Milestone Report)
 5. Data Science Capstone.R 
 6. Final Project Submission.Rpres
+7. Final Project submission-rpubs.html
+8. Final Project Submission.md
