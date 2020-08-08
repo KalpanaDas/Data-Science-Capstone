@@ -18,17 +18,3 @@ The pitch presentation is available at: https://rpubs.com/Kalpana_Das/647170
 The code files and presentation files are available on my GitHub repo: https://github.com/KalpanaDas/Data-Science-Capstone/
 
 The Milestone Report on RPubs is available at: https://rpubs.com/Kalpana_Das/646738
-
-This repository contains the following files:
-
-1. README.md
-
-2. Milestone Report.Rmd
-
-3. Milestone Report.html
-
-4. Data Science Capstone.R
-
-5. Final Project Submission.Rpres
-
-6. Final Project Submission.md
