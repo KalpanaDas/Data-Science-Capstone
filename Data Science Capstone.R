@@ -8,6 +8,8 @@ if(!file.exists("./data")){dir.create("./data")
 
 ## Loading the required packages 
 library(plyr)
+library(NLM)
+library(RColorBrewer)
 library(magrittr)
 library(stringr)
 library(stringi)
@@ -80,7 +82,6 @@ tdm_3gram_df <- ngram_sorted_df(tdm_3gram)
 tdm_4gram_df <- ngram_sorted_df(tdm_4gram)
 
 # Saving the data frames into R-compressed files
-
 quadgram <- data.frame(rows = rownames(tdm_4gram_df),count = tdm_4gram_df$Count)
 quadgram$rows <- as.character(quadgram$rows)
 quadgram_split <- strsplit(as.character(quadgram$rows),split = " ")
