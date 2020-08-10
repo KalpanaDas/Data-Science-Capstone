@@ -1,0 +1,155 @@
+---
+title: "Milestone Report"
+author: "Kalpana Das"
+date: "8/6/2020"
+output:
+  word_document: default
+  html_document: default
+---
+
+## Introduction
+
+The goal of this project is just to display that you've gotten used to working with the data and that you are on track to create your prediction algorithm. Please submit a report on R Pubs (http://rpubs.com/) that explains your exploratory analysis and your goals for the eventual app and algorithm. This document should be concise and explain only the major features of the data you have identified and briefly summarize your plans for creating the prediction algorithm and Shiny app in a way that would be understandable to a non-data scientist manager. You should make use of tables and plots to illustrate important summaries of the data set. The motivation for this project is to: 
+
+1. Demonstrate that you've downloaded the data and have successfully loaded it in.
+
+2. Create a basic report of summary statistics about the data sets.
+
+3. Report any interesting findings that you amassed so far.
+
+4. Get feedback on your plans for creating a prediction algorithm and Shiny app.
+
+## Getting the Data  
+
+You must have the data downloaded from the link below and not from external websites to start.
+
+https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip
+
+Download the data if it is not already there.
+
+```{r}
+if(!file.exists("./data")){dir.create("./data")
+  Url <- "https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip"
+  download.file(Url, destfile="./data/Coursera-SwiftKey.zip", mode = "wb")
+  unzip(zipfile="./data/Coursera-SwiftKey.zip", exdir="./data")}
+```
+
+## Loading the required packages 
+
+```{r}
+library(plyr)
+library(magrittr)
+library(stringr)
+library(stringi)
+library(tm)
+library(SnowballC)
+library(ggplot2)
+library(wordcloud)
+library(RWeka)
+```
+
+## Reading the Data
+
+```{r}
+data_Blogs <- readLines("./data/final/en_US/en_US.blogs.txt", encoding = "UTF-8", skipNul = TRUE)
+data_News <- readLines("./data/final/en_US/en_US.news.txt", encoding = "UTF-8", skipNul = TRUE)
+data_Twitter <- readLines("./data/final/en_US/en_US.twitter.txt", encoding = "UTF-8", skipNul = TRUE)
+```
+
+## Summary statistics of the Datasets
+
+```{r}
+stri_stats_general(data_Blogs)
+```
+
+```{r}
+stri_stats_general(data_News)
+```
+
+```{r}
+stri_stats_general(data_Twitter)
+```
+
+## Data Preparation
+
+Sampling the data and making the corpus.
+
+```{r}
+subdata_Blogs <- sample(data_Blogs, size = 1000)
+subdata_News <- sample(data_News, size = 1000)
+subdata_Twitter <- sample(data_Twitter, size = 1000)
+sampled_Data <- c(subdata_Blogs, subdata_News, subdata_Twitter)
+corpus <- VCorpus(VectorSource(sampled_Data))
+```
+
+Removing numbers, punctuations, stopwords, white spaces, etc. from the corpus.
+
+```{r}
+toSpace <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
+corpus <- tm_map(corpus, toSpace, "/|@|//|$|:|:)|*|&|!|?|_|-|#|")
+corpus <- tm_map(corpus, content_transformer(tolower))
+corpus <- tm_map(corpus, removeNumbers)
+corpus <- tm_map(corpus, removePunctuation)
+corpus <- tm_map(corpus, removeWords, stopwords())
+corpus <- tm_map(corpus, stemDocument)
+corpus <- tm_map(corpus, stripWhitespace)
+```
+
+Creating the Term-Document-Matrices.
+
+```{r}
+dtm_1 <- TermDocumentMatrix(corpus)
+bigram <- function(x) NGramTokenizer(x, Weka_control(min = 2, max = 2))
+dtm_2 <- TermDocumentMatrix(corpus, control = list(tokenize = bigram))
+trigram <- function(x) NGramTokenizer(x, Weka_control(min = 3, max = 3))
+dtm_3 <- TermDocumentMatrix(corpus, control = list(tokenize = trigram))
+```
+
+## Data Exploration
+
+Generating the word cloud. Word Cloud is visual representation of the words based on their frequencies. 
+
+```{r, warning = FALSE}
+wordcloud(corpus, max.words = 100, random.order = FALSE, rot.per=0.30, use.r.layout = TRUE, colors = brewer.pal(10, "Dark2"))
+```
+
+## Word Analysis
+
+For the data analysis of text document we are creating word matrices with 1-Gram, 2-Gram and 3-Grams. These N-Grams model set improves the predictabily of the data analysis.
+
+1-Gram Frequency
+
+```{r}
+freq1 <- rowSums(as.matrix(dtm_1))
+freq1 <- sort(freq1, decreasing = TRUE)
+dfFreq1 <- data.frame(word = names(freq1), freq = freq1)
+ggplot(dfFreq1[1:20, ], aes(word, freq)) +
+  geom_bar(stat = "identity", colour = "black") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("1-Gram Frequency")
+```
+
+2-Gram Frequency
+
+```{r}
+freq2 <- rowSums(as.matrix(dtm_2))
+freq2 <- sort(freq2, decreasing = TRUE)
+dfFreq2 <- data.frame(word = names(freq2), freq = freq2)
+ggplot(dfFreq2[1:20, ], aes(word, freq)) +
+  geom_bar(stat = "identity", colour = "black") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("2-Gram Frequency")
+```
+
+3-Gram Frequency
+
+```{r}
+freq3 <- rowSums(as.matrix(dtm_3))
+freq3 <- sort(freq3, decreasing = TRUE)
+dfFreq3 <- data.frame(word = names(freq3), freq = freq3)
+ggplot(dfFreq3[1:20, ], aes(word, freq)) +
+  geom_bar(stat = "identity", colour = "black") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + ggtitle("3-Gram Frequency")
+```
+
+## Future work and feedback
+
+The aim is to make a predictive model that predicts the most probable words that come after an input from the user. This model will be evaluated and deployed as a Shiny application. Looking forward to helpful feedback from you guys!
