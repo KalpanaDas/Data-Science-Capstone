@@ -10,6 +10,8 @@ The goal of this exercise is to create a product to highlight the prediction alg
 
 The Shiny app for the the assignment is available at: https://kalpanadas.shinyapps.io/ShinyApp/
 
+(Some input phrases to test can be "happy mothers" - day, "two years" - ago, "my name" - is, "how are" - you, and so on.)
+
 The Pitch presentation is available at: https://rpubs.com/Kalpana_Das/647726
 
 The Milestone Report on RPubs is available at: https://rpubs.com/Kalpana_Das/646738
